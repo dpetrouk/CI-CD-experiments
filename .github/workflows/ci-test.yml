@@ -28,7 +28,18 @@ jobs:
           git config user.email "<>"
           git log --pretty="format:" --name-only --since="1 day ago" | sort | uniq | cut -d. -f1 > ./diff
           cat ./diff | { echo $markup_header ; cat ; } >> $GITHUB_STEP_SUMMARY
-          
+      
+      - name: Run Docker
+        id: dock
+        uses: 'docker'
+        image: 'Dockerfile'
+        with:
+          args: The ${{ github.event_name }} event triggered this step.
+
+      - name: Add Docker results to diff
+        run: |
+          echo${{ steps.dock.outputs.event_info }}" >> ./diff
+
       - name: send telegram message on push
         uses: appleboy/telegram-action@master
         with:
