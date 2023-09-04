@@ -1,0 +1,37 @@
+name: test action
+
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Git checkout 
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - name: Output list of files edited today
+        id: diff
+        run: |
+          markup_header="### List of files edited today:"
+          git config user.name "gh-actions bot"
+          git config user.email "<>"
+          git log --pretty="format:" --name-only --since="1 day ago" | sort | uniq | cut -d. -f1 > ./diff
+          cat ./diff | { echo $markup_header ; cat ; } >> $GITHUB_STEP_SUMMARY
+          
+      - name: send telegram message on push
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message_file: ./diff
