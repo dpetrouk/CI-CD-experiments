@@ -23,7 +23,13 @@ jobs:
           fetch-depth: 0
       - name: Build and run docker image
         id: dock
-        run: docker run -it $(docker build - < Dockerfile)
+        run: |
+          docker run -ti --rm -v ./shared:/shared alpine:3.10
+          cd shared
+          rm file
+          echo some_var=some_text > new_file
+          cat new_file >> $GITHUB_OUTPUT
+        # run: docker run -it $(docker build - < Dockerfile)
       # - name: Build docker images
       #   run: docker build local < Dockerfile
       # - name: Run tests
@@ -58,7 +64,7 @@ jobs:
 
       - name: Add Docker results to diff
         run: |
-          echo${{ steps.dock.outputs.event_info }}" >> ./diff
+          echo ${{ steps.dock.outputs.some_var }}" >> ./diff
 
       - name: Send telegram message on push
         uses: appleboy/telegram-action@master
