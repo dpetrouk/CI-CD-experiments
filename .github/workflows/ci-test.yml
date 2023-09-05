@@ -70,7 +70,7 @@ jobs:
 
       - name: Add Docker results to diff
         run: |
-          echo ${{ steps.docker.outputs.alpine }}" >> ./diff
+          echo ${{ steps.docker.outputs.alpine }} >> ./diff
 
       - name: Send telegram message on push
         uses: appleboy/telegram-action@master
