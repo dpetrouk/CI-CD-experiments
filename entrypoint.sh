@@ -1,4 +1,5 @@
 #!/bin/sh -l
 
 time=$(date)
-echo "event_info=${1}\ntime: $time" >> $GITHUB_OUTPUT
+# ${1}\
+echo "event_info=time: $time" >> $GITHUB_OUTPUT
