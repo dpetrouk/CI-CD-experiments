@@ -25,7 +25,8 @@ jobs:
       #   id: dock
       #   run: |
       #     docker run -ti --rm -v ./shared:/shared alpine:3.10
-      - id: docker
+      - name: Docker
+        id: docker
         run: docker run --rm alpine sh -c 'echo "alpine=$(cat /etc/alpine-release)"' >> $GITHUB_OUTPUT
       # - run: echo ${{ steps.docker.outputs.alpine }}
       # docker build -t kangzeroo .
