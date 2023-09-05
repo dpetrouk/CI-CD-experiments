@@ -8,15 +8,24 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    container: node:17.6.0
+    # container: node:17.6.0
     # strategy:
     #   matrix:
     #     node-version: [14.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - run: node --version > ./diff
-      - run: npm --version >> ./diff
+      # - run: node --version > ./diff
+      # - run: npm --version >> ./diff
+
+      - name: Build docker images
+        run: docker build -t local < Dockerfile
+      - name: Run tests
+        id: dock
+        run: docker run -it -v $PWD:/ -w/ local
+        # with:
+        #   args: The ${{ github.event_name }} event triggered this step.
+        # run: docker run -it -v $PWD:/ -w/ local make test
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - name: Git checkout 
       #   uses: actions/checkout@master
@@ -45,9 +54,9 @@ jobs:
       # - name: Run tests
       #   run: docker compose run test
 
-      # - name: Add Docker results to diff
-      #   run: |
-      #     echo${{ steps.dock.outputs.event_info }}" >> ./diff
+      - name: Add Docker results to diff
+        run: |
+          echo${{ steps.dock.outputs.event_info }}" >> ./diff
 
       - name: send telegram message on push
         uses: appleboy/telegram-action@master
