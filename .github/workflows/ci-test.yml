@@ -24,7 +24,7 @@ jobs:
       - name: Build and run docker image
         id: dock
         run: |
-          docker run -ti --rm -v ./shared:/shared alpine:3.10
+          docker run --rm -v ./shared:/shared alpine:3.10
           cd shared
           rm file
           echo some_var=some_text > new_file
