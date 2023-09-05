@@ -8,37 +8,48 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
+    container: node:17.6.0
+    # strategy:
+    #   matrix:
+    #     node-version: [14.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - run: node --version > ./diff
+      - run: npm --version >> ./diff
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Git checkout 
-        uses: actions/checkout@master
-        with:
-          fetch-depth: 0
+      # - name: Git checkout 
+      #   uses: actions/checkout@master
+      #   with:
+      #     fetch-depth: 0
 
-      - name: Output list of files edited today
-        id: diff
-        run: |
-          markup_header="### List of files edited today:"
-          git config user.name "gh-actions bot"
-          git config user.email "<>"
-          git log --pretty="format:" --name-only --since="1 day ago" | sort | uniq | cut -d. -f1 > ./diff
-          cat ./diff | { echo $markup_header ; cat ; } >> $GITHUB_STEP_SUMMARY
+      - 
+      # - name: Output list of files edited today
+      #   id: diff
+      #   run: |
+      #     markup_header="### List of files edited today:"
+      #     git config user.name "gh-actions bot"
+      #     git config user.email "<>"
+      #     git log --pretty="format:" --name-only --since="1 day ago" | sort | uniq | cut -d. -f1 > ./diff
+      #     cat ./diff | { echo $markup_header ; cat ; } >> $GITHUB_STEP_SUMMARY
       
-      - name: Run Docker
-        id: dock
-        uses: 'docker'
-        image: 'Dockerfile'
-        with:
-          args: The ${{ github.event_name }} event triggered this step.
+      # - name: Run Docker
+      #   id: dock
+      #   uses: 'docker'
+      #   image: 'Dockerfile'
+      #   with:
+      #     args: The ${{ github.event_name }} event triggered this step.
+        
+      # - name: Build docker images
+      #   run: docker compose build
+      # - name: Setup database
+      #   run: docker compose run setup
+      # - name: Run tests
+      #   run: docker compose run test
 
-      - name: Add Docker results to diff
-        run: |
-          echo${{ steps.dock.outputs.event_info }}" >> ./diff
+      # - name: Add Docker results to diff
+      #   run: |
+      #     echo${{ steps.dock.outputs.event_info }}" >> ./diff
 
       - name: send telegram message on push
         uses: appleboy/telegram-action@master
