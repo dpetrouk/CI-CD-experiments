@@ -21,11 +21,13 @@ jobs:
         uses: actions/checkout@master
         with:
           fetch-depth: 0
-      - name: Build docker images
-        run: docker build -t local < Dockerfile
-      - name: Run tests
-        id: dock
-        run: docker run -it -v $PWD:/ -w/ local
+      - name: Build and run docker image
+        run: docker run -it $(docker build - < Docker)
+      # - name: Build docker images
+      #   run: docker build local < Dockerfile
+      # - name: Run tests
+      #   id: dock
+      #   run: docker run -it -v $PWD:/ -w/ local
         # with:
         #   args: The ${{ github.event_name }} event triggered this step.
         # run: docker run -it -v $PWD:/ -w/ local make test
