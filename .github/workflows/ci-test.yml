@@ -22,8 +22,6 @@ jobs:
       #   uses: actions/checkout@master
       #   with:
       #     fetch-depth: 0
-
-      - 
       # - name: Output list of files edited today
       #   id: diff
       #   run: |
