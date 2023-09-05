@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
       - name: Build and run docker image
         id: dock
-        run: docker run -it $(docker build - < Docker)
+        run: docker run -it $(docker build - < Dockerfile)
       # - name: Build docker images
       #   run: docker build local < Dockerfile
       # - name: Run tests
