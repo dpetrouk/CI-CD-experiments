@@ -17,7 +17,10 @@ jobs:
     steps:
       # - run: node --version > ./diff
       # - run: npm --version >> ./diff
-
+      - name: Git checkout 
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
       - name: Build docker images
         run: docker build -t local < Dockerfile
       - name: Run tests
@@ -27,10 +30,6 @@ jobs:
         #   args: The ${{ github.event_name }} event triggered this step.
         # run: docker run -it -v $PWD:/ -w/ local make test
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - name: Git checkout 
-      #   uses: actions/checkout@master
-      #   with:
-      #     fetch-depth: 0
       # - name: Output list of files edited today
       #   id: diff
       #   run: |
@@ -58,7 +57,7 @@ jobs:
         run: |
           echo${{ steps.dock.outputs.event_info }}" >> ./diff
 
-      - name: send telegram message on push
+      - name: Send telegram message on push
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
