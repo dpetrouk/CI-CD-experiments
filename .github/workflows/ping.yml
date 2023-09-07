@@ -34,10 +34,13 @@ jobs:
       - name: Perform ping
         id: ping
         run: |
+          pwd
+          ls -la
           echo ${{ secrets.SITES }} | python check-sites.py
           echo result=$(cat result | wc -c) >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
 
-      - name: Send telegram message if sites are down
+      - name: Send telegram message if some site is down
         uses: appleboy/telegram-action@master
         if: ${{ steps.ping.outputs.result }} != "0"
         with:
