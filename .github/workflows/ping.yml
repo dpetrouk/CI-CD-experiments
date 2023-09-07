@@ -34,8 +34,6 @@ jobs:
       - name: Perform ping
         id: ping
         run: |
-          pwd
-          ls -la
           echo ${{ secrets.SITES }} | python check-sites.py
           echo result=$(cat result | wc -c) >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
