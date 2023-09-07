@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 
-import sys
+# import sys
 import requests
+import os
 
 # with open('sites', 'r') as f:
 #     sites = [line.strip() for line in f.readlines()]
 
-sites = []
-for line in sys.stdin:
-    sites.append(line.strip())
+# sites = []
+# for line in sys.stdin:
+#     sites.append(line.strip())
+
+sites = os.getenv('SITES').split("\n")
 
 # print(sites)
 

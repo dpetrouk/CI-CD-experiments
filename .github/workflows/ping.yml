@@ -35,9 +35,11 @@ jobs:
         id: ping
         run: |
           chmod +x check-sites.py
-          echo ${{ secrets.SITES }} | python check-sites.py
+          python check-sites.py
           echo result=$(cat result | wc -c) >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
+        env:
+          SITES: ${{ secrets.SITES }}
 
       - name: Send telegram message if some site is down
         uses: appleboy/telegram-action@master
