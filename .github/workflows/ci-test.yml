@@ -15,6 +15,26 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/test.key
+          chmod 600 ~/.ssh/test.key
+          cat >>~/.ssh/config <<END
+          Host test
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/test.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+
+      - name: Get Linux distro name and version
+        id: server
+        run: ssh test 'echo host_data=$(hostnamectl)' >> $GITHUB_OUTPUT
       # - run: node --version > ./diff
       # - run: npm --version >> ./diff
       # - name: Git checkout 
@@ -25,9 +45,9 @@ jobs:
       #   id: dock
       #   run: |
       #     docker run -ti --rm -v ./shared:/shared alpine:3.10
-      - name: Docker
-        id: docker
-        run: docker run --rm alpine sh -c 'echo "alpine=$(cat /etc/alpine-release)"' >> $GITHUB_OUTPUT
+      # - name: Docker
+      #   id: docker
+      #   run: docker run --rm alpine sh -c 'echo "alpine=$(cat /etc/alpine-release)"' >> $GITHUB_OUTPUT
       # - run: echo ${{ steps.docker.outputs.alpine }}
       # docker build -t kangzeroo .
       # docker run --rm kangzeroo
@@ -68,13 +88,13 @@ jobs:
       # - name: Run tests
       #   run: docker compose run test
 
-      - name: Add Docker results to diff
+      - name: Add results to output file
         run: |
-          echo ${{ steps.docker.outputs.alpine }} >> ./diff
+          echo ${{ steps.server.outputs.host_data }} >> ./output
 
       - name: Send telegram message on push
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message_file: ./diff
+          message_file: ./output
