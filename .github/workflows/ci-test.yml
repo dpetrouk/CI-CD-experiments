@@ -34,7 +34,7 @@ jobs:
 
       - name: Get Linux distro name and version
         id: server
-        run: ssh test 'echo host_data=$(hostnamectl)' >> $GITHUB_OUTPUT
+        run: ssh test 'echo host_data=$(hostnamectl)' > output
       # - run: node --version > ./diff
       # - run: npm --version >> ./diff
       # - name: Git checkout 
@@ -88,9 +88,9 @@ jobs:
       # - name: Run tests
       #   run: docker compose run test
 
-      - name: Add results to output file
-        run: |
-          echo ${{ steps.server.outputs.host_data }} >> ./output
+      # - name: Add results to output file
+      #   run: |
+      #     echo ${{ steps.server.outputs.host_data }} >> ./output
 
       - name: Send telegram message on push
         uses: appleboy/telegram-action@master
