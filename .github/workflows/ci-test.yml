@@ -34,7 +34,7 @@ jobs:
 
       - name: Get Linux distro name and version
         id: server
-        run: ssh test 'echo host_data=$(hostnamectl)' > output
+        run: ssh test 'hostnamectl' > output
       # - run: node --version > ./diff
       # - run: npm --version >> ./diff
       # - name: Git checkout 
