@@ -1,6 +1,7 @@
 name: test action
 
 on:
+  push:
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -35,7 +36,7 @@ jobs:
       - name: Pass repo dirname and branch
         run: |
           echo "${{ github.event.repository.name }}" > repo_dirname
-          echo "${{ github.ref }}" > branch
+          echo "${{ github.ref_name }}" > branch
           scp repo_dirname branch test:
       
       - name: Get Linux distro name and version
