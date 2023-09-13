@@ -32,6 +32,12 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
 
+      - name: Pass repo dirname and branch
+        run: |
+          ${{ github.event.repository.name }} > repo_dirname
+          ${{ github.ref }} > branch
+          scp repo_dirname branch test:
+      
       - name: Get Linux distro name and version
         id: server
         run: ssh test './run_bot_commands.sh' > output
