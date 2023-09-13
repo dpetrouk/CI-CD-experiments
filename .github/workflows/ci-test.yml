@@ -34,8 +34,8 @@ jobs:
 
       - name: Pass repo dirname and branch
         run: |
-          ${{ github.event.repository.name }} > repo_dirname
-          ${{ github.ref }} > branch
+          echo "${{ github.event.repository.name }}" > repo_dirname
+          echo "${{ github.ref }}" > branch
           scp repo_dirname branch test:
       
       - name: Get Linux distro name and version
